@@ -8,7 +8,7 @@
 3. Перейдите в папку shift/build/libs
 4. Используйте команду java -jar shift-1.0-SNAPSHOT.jar
 ## Флаги для использования приложения
-```bash
+```console
   <files>...             List of input files
   -a, --append               Append to existing files
   -f, --file-info            Analyze file information
