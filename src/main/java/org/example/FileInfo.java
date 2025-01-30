@@ -56,15 +56,21 @@ public class FileInfo {
         int count = 0;
 
         for (String line : lines) {
-            long number = Long.parseLong(line);
-            sum += number;
-            max = Math.max(max, number);
-            min = Math.min(min, number);
-            count++;
+            try {
+                long number = Long.parseLong(line);
+                sum += number;
+                max = Math.max(max, number);
+                min = Math.min(min, number);
+                count++;
+            } catch (NumberFormatException e) {
+                log.warn("{} contains unsupported data type. Skipped integer: {}", fileName, line);
+            }
         }
 
+        long average = count > 0 ? (sum / count) : 0;
+
         System.out.printf("File: %s\n\tInteger Stats ->\n\tSum: %d,\n\tMax: %d,\n\tMin: %d,\n\tAverage: %d\n",
-                fileName, sum, max, min, count > 0 ? (sum / count) : 0);
+                fileName, sum, max, min, average);
     }
 
     private void analyzeDoubles(List<String> lines, String fileName) throws NumberFormatException {
@@ -79,7 +85,7 @@ public class FileInfo {
                 min = Math.min(min, number);
                 count++;
             } catch (NumberFormatException e) {
-                log.error("Invalid double value: " + line, e);
+                log.warn("{} contains unsupported data type. Skipped double: {}: ", fileName, line);
             }
         }
 

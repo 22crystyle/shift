@@ -18,7 +18,7 @@ public class FilePatternParser {
         this.patternName = patternName;
 
         for (File file : input) {
-            log.info("Parsing file {}", file.getAbsolutePath());
+            log.info("Parsing file: {}", file.getAbsolutePath());
 
             try (Scanner reader = new Scanner(file)) {
                 while (reader.hasNextLine()) {
@@ -39,7 +39,7 @@ public class FilePatternParser {
                 } else {
                     log.error(
                             "Can't read file: {} Check reading permissions or file path",
-                            file.getAbsolutePath(), e );
+                            file.getAbsolutePath());
                 }
             }
         }
