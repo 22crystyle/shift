@@ -15,7 +15,6 @@ dependencies {
     implementation("info.picocli:picocli:4.7.6")
     annotationProcessor("info.picocli:picocli-codegen:4.7.6")
 
-
     compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
 
@@ -33,7 +32,11 @@ compileJava {
 
 jar {
     manifest {
-        attributes "Main-Class": "org.example.Main"
+        attributes (
+                "Main-Class": "org.example.Main",
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+        )
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 

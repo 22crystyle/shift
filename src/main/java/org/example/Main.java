@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-@Command(name = "file-processor", mixinStandardHelpOptions = true, description = "Processes files based on given patterns.")
+@Command(name = "file-processor", mixinStandardHelpOptions = true, description = "File content filtering utility.", version = "1.0-SNAPSHOT")
 public class Main implements Runnable {
     @Option(names = {"-o", "--output"}, description = "Output directory path", defaultValue = "./")
     private String outputDir;
