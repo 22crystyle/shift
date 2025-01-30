@@ -14,7 +14,7 @@ public class FilePatternParser {
     private final Map<Pattern, List<String>> data = new HashMap<>();
     private PatternName[] patternName;
 
-    public FilePatternParser parse(List<File> input, PatternName[] patternName) throws IOException {
+    public FilePatternParser parse(List<File> input, PatternName[] patternName) {
         this.patternName = patternName;
 
         for (File file : input) {

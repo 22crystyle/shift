@@ -46,22 +46,18 @@ public class Main implements Runnable {
             return;
         }
 
-        try {
-            char infoType = summary ? 's' : fullInfo ? 'f' : '\0';
+        char infoType = summary ? 's' : fullInfo ? 'f' : '\0';
 
-            FilePatternParser parser = new FilePatternParser().parse(files, PatternName.values());
-            FilePatternWriter writer = new FilePatternWriter();
-            FileInfo info = new FileInfo(writer.write(parser, outputDir, prefix, append));
+        FilePatternParser parser = new FilePatternParser().parse(files, PatternName.values());
+        FilePatternWriter writer = new FilePatternWriter();
+        FileInfo info = new FileInfo(writer.write(parser, outputDir, prefix, append));
 
-            if (infoType == 's') {
-                info.summary();
-            }
+        if (infoType == 's') {
+            info.summary();
+        }
 
-            if (infoType == 'f') {
-                info.analyzeFiles();
-            }
-        } catch (IOException e) {
-            log.error("Error processing files", e);
+        if (infoType == 'f') {
+            info.analyzeFiles();
         }
     }
 }

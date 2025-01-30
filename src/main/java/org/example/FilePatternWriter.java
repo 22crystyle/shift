@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class FilePatternWriter {
     private final ArrayList<File> editedFiles = new ArrayList<>();
 
-    public ArrayList<File> write(FilePatternParser parser, String output, String prefix, boolean append) throws IOException {
+    public ArrayList<File> write(FilePatternParser parser, String output, String prefix, boolean append) {
         PatternName[] patterns = parser.getPatternName();
         Map<Pattern, List<String>> data = parser.getData();
 
@@ -30,7 +30,7 @@ public class FilePatternWriter {
                     editedFiles.add(new File(output + prefix + pattern.getName()));
                     fos.write(sb.toString().getBytes(StandardCharsets.UTF_8));
                     log.info("File saved at: {}", output + prefix + pattern.getName());
-                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
                     log.error("Output path not found");
                     break;
                 }
