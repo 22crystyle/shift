@@ -1,29 +1,110 @@
-# Утилита фильтрации содержимого файлов. Тестовое задание. Курс JAVA. Компании ШИФТ
-## Требования к запуску
-1. Установите Oracle JDK 21.0.2, и переменную окружения JAVA_HOME для вашей операцинной системы
-2. Gradle >= 8.8, и путь к gradle-8.8/bin в переменную PATH вашей ОС
-## Запуск
-1. Перейдите в папку с проектом из консоли
-2. Используйте команду gradle jar
-3. Перейдите в папку shift/build/libs
-4. Используйте команду java -jar shift-1.0-SNAPSHOT.jar
-## Флаги для использования приложения
-```console
-  <files>...             List of input files
-  -a, --append               Append to existing files
-  -f, --file-info            Analyze file information
-  -h, --help                 Show this help message and exit.
-  -o, --output=<outputDir>   Output directory path
-  -p, --prefix=<prefix>      Prefix for output files
-  -s, --summary              Generate summary information
-  -V, --version              Print version information and exit.
+# File Processing Toolkit 🔍📁
+
+A Java CLI utility for analyzing and categorizing file contents by data type (integers, doubles, strings) with statistical reporting.
+
+![Java](https://img.shields.io/badge/Java-17%2B-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+## ✨ Features
+- Auto-detection of data types (integers, doubles, strings)
+- Statistical analysis (sum, avg, min/max values, string lengths)
+- File content categorization with regex patterns
+- Multiple output file generation
+- Summary reporting with line counts
+- CLI interface with picocli
+- Configurable logging (Log4j2)
+
+## 📦 Requirements
+- Java 17+
+- Lombok
+- Maven/Gradle
+
+## 🚀 Quick Start
+
+### 1. Build & Run
+```bash
+mvn clean package
+java -jar target/file-processor.jar [OPTIONS] FILES...
 ```
-### Зависимости ипользуемые gradle
-```groovy
-implementation("org.apache.logging.log4j:log4j-core:2.24.3")
-implementation("org.apache.logging.log4j:log4j-api:2.24.3")
-implementation("info.picocli:picocli:4.7.6")
-annotationProcessor("info.picocli:picocli-codegen:4.7.6")
-compileOnly("org.projectlombok:lombok:1.18.36")
-annotationProcessor("org.projectlombok:lombok:1.18.36")
+
+### 2. Analyze files with statistics:
+Analyze files with statistics:
+```bash
+java -jar file-processor.jar -f file1.txt data.csv
 ```
+Generate summary report:
+```bash
+java -jar file-processor.jar -s *.log
+```
+Process files with custom output:
+```bash
+java -jar file-processor.jar -o ./output/ -p "result_" -a important.log
+```
+## 🛠️ Command Line Options
+## 📂 Output Structure
+Creates 3 output files for detected data types:
+```
+output_dir/
+├── [prefix]integer.txt
+├── [prefix]double.txt
+└── [prefix]string.txt
+```
+## 📊 Analysis Examples
+### Integer File Analysis
+```
+File: numbers.txt
+    Integer Stats ->
+    Sum: 150
+    Max: 50
+    Min: 10
+    Average: 30
+```
+### String File Analysis
+```
+File: messages.log
+    The total number of lines of type String: 42
+    Shortest line: 3 chars
+    Longest line: 256 chars
+```
+## 🏗️ Project Structure
+```
+src/main/java/org/example/
+├── Main.java              # CLI entry point
+├── FileInfo.java          # Statistical analysis
+├── FilePatternParser.java # Content categorization
+├── FilePatternWriter.java # File output handler
+└── PatternName.java       # Regex pattern definitions
+```
+## ⚙️ Dependencies
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.30</version>
+    </dependency>
+    <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>4.7.5</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.20.0</version>
+    </dependency>
+</dependencies>
+```
+## 🔧 Logging Configuration
+Edit log4j2.properties to control logging:
+```properties
+rootLogger.level = info  # Change to warn/error for less verbose
+appender.console.layout.pattern = [%level] %msg%n
+```
+
+
+
+
+
+
+
