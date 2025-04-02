@@ -40,7 +40,16 @@ Process files with custom output:
 ```bash
 java -jar file-processor.jar -o ./output/ -p "result_" -a important.log
 ```
+
 ## 🛠️ Command Line Options
+| Option            | Description                      | Default     |
+|-------------------|----------------------------------|-------------|
+| `-o, --output`    | Output directory path            | Current dir |
+| `-p, --prefix`    | Filename prefix for output files | ""          |
+| `-a, --append`    | Append to existing files         | false       |
+| `-s, --summary`   | Generate line count summary      | false       |
+| `-f, --file-info` | Show detailed file analysis      | false       |
+
 ## 📂 Output Structure
 Creates 3 output files for detected data types:
 ```
@@ -49,6 +58,7 @@ output_dir/
 ├── [prefix]double.txt
 └── [prefix]string.txt
 ```
+
 ## 📊 Analysis Examples
 ### Integer File Analysis
 ```
