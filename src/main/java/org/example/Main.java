@@ -1,6 +1,9 @@
 package org.example;
 
 import lombok.extern.log4j.Log4j2;
+import org.example.utils.FileInfo;
+import org.example.utils.FilePatternParser;
+import org.example.utils.FilePatternWriter;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

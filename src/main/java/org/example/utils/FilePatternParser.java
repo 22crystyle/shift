@@ -1,7 +1,8 @@
-package org.example;
+package org.example.utils;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.example.PatternName;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,13 +1,12 @@
-package org.example;
+package org.example.utils;
 
 import lombok.extern.log4j.Log4j2;
+import org.example.PatternName;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
