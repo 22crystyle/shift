@@ -1,15 +1,12 @@
 package org.example;
 
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

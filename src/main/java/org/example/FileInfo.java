@@ -1,6 +1,7 @@
 package org.example;
 
 import lombok.extern.log4j.Log4j2;
+import org.example.stats.StatsFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,6 +14,16 @@ public class FileInfo {
 
     public FileInfo(List<File> files) {
         this.files = files;
+    }
+
+    private static String determineType(String str) {
+        if (PatternName.INTEGER.getPattern().matcher(str).matches()) {
+            return PatternName.INTEGER.getName();
+        }
+        if (PatternName.DOUBLE.getPattern().matcher(str).matches()) {
+            return PatternName.DOUBLE.getName();
+        }
+        return PatternName.STRING.getName();
     }
 
     public void summary() {
@@ -41,6 +52,8 @@ public class FileInfo {
                     continue;
                 }
                 String type = determineType(lines.getFirst());
+                StatsFactory.get(type).ifPresentOrElse(a -> a.collect(lines, file.getName()),
+                        () -> log.warn("{} contains unsupported data type", file.getName()));
                 switch (type) {
                     case "integer" -> analyzeIntegers(lines, file.getName());
                     case "double" -> analyzeDoubles(lines, file.getName());
@@ -93,11 +106,18 @@ public class FileInfo {
 
         double average = count > 0 ? (sum / count) : 0;
 
-        System.out.printf("File: %s\n\t" +
-                "Double Stats ->\n\t" +
-                "Sum: %f\n\tMax: %f\n\t" +
-                "Min: %f\n\t" +
-                "Average: %f\n", fileName, sum, max, min, average);
+        System.out.printf("""
+                File: %s
+                \t\
+                Double Stats ->
+                \t\
+                Sum: %f
+                \tMax: %f
+                \t\
+                Min: %f
+                \t\
+                Average: %f
+                """, fileName, sum, max, min, average);
     }
 
     private void analyzeStrings(List<String> lines, String fileName) {
@@ -111,19 +131,14 @@ public class FileInfo {
             }
         }
 
-        System.out.printf("File: %s\n\t" +
-                "The total number of lines of type String: %d\n\t" +
-                "Shortest line: %d chars\n\t" +
-                "Longest line: %d chars\n", fileName, lines.size(), min, max);
-    }
-
-    private static String determineType(String str) {
-        if (PatternName.INTEGER.getPattern().matcher(str).matches()) {
-            return PatternName.INTEGER.getName();
-        }
-        if (PatternName.DOUBLE.getPattern().matcher(str).matches()) {
-            return PatternName.DOUBLE.getName();
-        }
-        return "string";
+        System.out.printf("""
+                File: %s
+                \t\
+                The total number of lines of type String: %d
+                \t\
+                Shortest line: %d chars
+                \t\
+                Longest line: %d chars
+                """, fileName, lines.size(), min, max);
     }
 }
