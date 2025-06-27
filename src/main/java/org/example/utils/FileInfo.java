@@ -38,7 +38,7 @@ public class FileInfo {
                 totalLines += (int) fileLines;
                 log.info("{} has {} lines", file.getName(), fileLines);
             } catch (IOException e) {
-                log.error("File not found: {}", file.getName());
+                logFileNotFound(file, e);
             }
         }
         log.info("Total lines: {}", totalLines);
@@ -62,11 +62,14 @@ public class FileInfo {
                     continue;
                 }
                 Stats stats = optStats.get();
-                stats.collect(lines, file.getName());
-                StatsReporter.print(stats.getMetadata());
+                StatsReporter.print(stats.collect(lines, file.getName()));
             } catch (FileNotFoundException e) {
-                log.error("File not found: {}", file.getName());
+                logFileNotFound(file, e);
             }
         }
+    }
+
+    private void logFileNotFound(File file, Exception e) {
+        log.error("File not found: {}", file.getName(), e);
     }
 }

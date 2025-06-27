@@ -2,19 +2,15 @@ package org.example.stats;
 
 import org.example.PatternName;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StringStats implements Stats {
-    private final Map<String, Object> metadata = new LinkedHashMap<>();
-
     long max = Long.MIN_VALUE;
     long min = Long.MAX_VALUE;
 
     @Override
-    public void collect(List<String> lines, String fileName) {
+    public StatsResult collect(List<String> lines, String fileName) {
         for (String line : lines) {
             if (line.length() > max) {
                 max = line.length();
@@ -24,14 +20,11 @@ public class StringStats implements Stats {
             }
         }
 
-        metadata.put("Type", PatternName.STRING);
-        metadata.put("File Name", fileName);
-        metadata.put("Longest line", max);
-        metadata.put("Shortest line", min);
-    }
+        Map<String, Object> metrics = Map.of(
+                "Longest string", max,
+                "Shortest string", min
+        );
 
-    @Override
-    public Map<String, Object> getMetadata() {
-        return Collections.unmodifiableMap(metadata);
+        return new StatsResult(PatternName.STRING.getName(), fileName, metrics);
     }
 }
