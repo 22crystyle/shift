@@ -6,70 +6,72 @@ import org.example.stats.Stats;
 import org.example.stats.StatsFactory;
 import org.example.stats.StatsReporter;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
+import java.util.stream.Stream;
 
 @Log4j2
 public class FileInfo {
-    private final List<File> files;
+    private final List<Path> files;
 
-    public FileInfo(List<File> files) {
+    public FileInfo(List<Path> files) {
         this.files = files;
     }
 
     private static String determineType(String str) {
-        if (PatternName.INTEGER.getPattern().matcher(str).matches()) {
-            return PatternName.INTEGER.getName();
+        for (PatternName patternName : PatternName.values()) {
+            if (patternName.getPattern().matcher(str).matches()) {
+                return patternName.getName();
+            }
         }
-        if (PatternName.DOUBLE.getPattern().matcher(str).matches()) {
-            return PatternName.DOUBLE.getName();
-        }
+
         return PatternName.STRING.getName();
     }
 
     public void summary() {
-        int totalLines = 0;
-        for (File file : files) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                long fileLines = reader.lines().count();
-                totalLines += (int) fileLines;
-                log.info("{} has {} lines", file.getName(), fileLines);
+        long totalLines = 0;
+        for (Path file : files) {
+            try (Stream<String> stream = Files.lines(file, StandardCharsets.UTF_8)) {
+                long fileLines = stream.count();
+                totalLines += fileLines;
+                System.out.printf("%s has %d lines\n", file.getFileName(), fileLines);
             } catch (IOException e) {
                 logFileNotFound(file, e);
             }
         }
-        log.info("Total lines: {}", totalLines);
+        System.out.printf("Total lines: %d\n", totalLines);
     }
 
     public void analyzeFiles() {
-        for (File file : files) {
-            try (Scanner scanner = new Scanner(file)) {
-                List<String> lines = new ArrayList<>();
-                while (scanner.hasNextLine()) {
-                    lines.add(scanner.nextLine());
-                }
+        for (Path file : files) {
+            try {
+                List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
                 if (lines.isEmpty()) {
-                    log.error("Empty file: {}", file.getName());
+                    log.error("Empty file: {}", file.getFileName());
                     continue;
                 }
                 String type = determineType(lines.getFirst());
                 Optional<Stats> optStats = StatsFactory.get(type);
                 if (optStats.isEmpty()) {
-                    log.warn("{} contains unsupported data type", file.getName());
+                    log.warn("{} contains unsupported data type", file.getFileName());
                     continue;
                 }
                 Stats stats = optStats.get();
-                StatsReporter.print(stats.collect(lines, file.getName()));
+                StatsReporter.print(stats.collect(lines, file));
             } catch (FileNotFoundException e) {
                 logFileNotFound(file, e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
-    private void logFileNotFound(File file, Exception e) {
-        log.error("File not found: {}", file.getName(), e);
+    private void logFileNotFound(Path file, Exception e) {
+        log.error("File not found: {}", file.getFileName(), e);
     }
 }

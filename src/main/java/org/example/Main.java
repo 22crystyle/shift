@@ -9,7 +9,9 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
 @Command(name = "file-processor", mixinStandardHelpOptions = true, description = "File content filtering utility.", version = "1.0-SNAPSHOT")
 public class Main implements Runnable {
     @Option(names = {"-o", "--output"}, description = "Output directory path", defaultValue = "./")
-    private String outputDir;
+    private Path outDir;
 
     @Option(names = {"-p", "--prefix"}, description = "Prefix for output files", defaultValue = "")
     private String prefix;
@@ -32,7 +34,7 @@ public class Main implements Runnable {
     private boolean fullInfo;
 
     @Parameters(description = "List of input files", arity = "1..*")
-    private List<File> files = new ArrayList<>();
+    private List<Path> files = new ArrayList<>();
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Main()).execute(args);
@@ -41,6 +43,11 @@ public class Main implements Runnable {
 
     @Override
     public void run() {
+        if (!Files.exists(outDir)) {
+            log.error("Output path '{}' don't exists", outDir);
+            System.exit(1);
+        }
+
         if (files.isEmpty()) {
             log.error("No input files provided.");
             return;
@@ -49,8 +56,18 @@ public class Main implements Runnable {
         char infoType = summary ? 's' : fullInfo ? 'f' : '\0';
 
         FilePatternParser parser = new FilePatternParser().parse(files, PatternName.values());
+        if (parser.getData().values().stream().allMatch(List::isEmpty)) {
+            log.error("No data processed. Check input files.");
+            return;
+        }
+        FileInfo info = null;
+
         FilePatternWriter writer = new FilePatternWriter();
-        FileInfo info = new FileInfo(writer.write(parser, outputDir, prefix, append));
+        try {
+            info = new FileInfo(writer.write(parser, outDir, prefix, append));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         if (infoType == 's') {
             info.summary();

@@ -2,15 +2,17 @@ package org.example.stats;
 
 import org.example.PatternName;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
 public class StringStats implements Stats {
     long max = Long.MIN_VALUE;
     long min = Long.MAX_VALUE;
+    long count = 0;
 
     @Override
-    public StatsResult collect(List<String> lines, String fileName) {
+    public StatsResult collect(List<String> lines, Path file) {
         for (String line : lines) {
             if (line.length() > max) {
                 max = line.length();
@@ -18,13 +20,15 @@ public class StringStats implements Stats {
             if (line.length() < min) {
                 min = line.length();
             }
+            count++;
         }
 
         Map<String, Object> metrics = Map.of(
                 "Longest string", max,
-                "Shortest string", min
+                "Shortest string", min,
+                "Count", count
         );
 
-        return new StatsResult(PatternName.STRING.getName(), fileName, metrics);
+        return new StatsResult(PatternName.STRING.getName(), file, metrics);
     }
 }
