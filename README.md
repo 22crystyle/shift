@@ -23,22 +23,22 @@ A Java CLI utility for analyzing and categorizing file contents by data type (in
 
 ### 1. Build & Run
 ```bash
-mvn clean package
-java -jar target/file-processor.jar [OPTIONS] FILES...
+./gradlew build
+java -jar build/libs/shift.jar [OPTIONS] FILES...
 ```
 
 ### 2. Analyze files with statistics:
 Analyze files with statistics:
 ```bash
-java -jar file-processor.jar -f file1.txt data.csv
+java -jar shift.jar -f file1.txt data.txt
 ```
 Generate summary report:
 ```bash
-java -jar file-processor.jar -s *.log
+java -jar shift.jar -s file1.txt
 ```
 Process files with custom output:
 ```bash
-java -jar file-processor.jar -o ./output/ -p "result_" -a important.log
+java -jar shift.jar -o ./output/ -p "result_" -a important.log
 ```
 
 ## 🛠️ Command Line Options
@@ -62,48 +62,31 @@ output_dir/
 ## 📊 Analysis Examples
 ### Integer File Analysis
 ```
-File: numbers.txt
-    Integer Stats ->
-    Sum: 150
-    Max: 50
-    Min: 10
-    Average: 30
+=== integer statistics for .\integer.txt ===
+max: 100500
+average: 50273
+min: 45
+count: 2
+sum: 100545
 ```
 ### String File Analysis
 ```
-File: messages.log
-    The total number of lines of type String: 42
-    Shortest line: 3 chars
-    Longest line: 256 chars
-```
-## 🏗️ Project Structure
-```
-src/main/java/org/example/
-├── Main.java              # CLI entry point
-├── FileInfo.java          # Statistical analysis
-├── FilePatternParser.java # Content categorization
-├── FilePatternWriter.java # File output handler
-└── PatternName.java       # Regex pattern definitions
+=== string statistics for .\string.txt ===
+The total number of lines of type String: 4
+Shortest line: 6
+Longest line: 26
 ```
 ## ⚙️ Dependencies
-```xml
-<dependencies>
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.18.30</version>
-    </dependency>
-    <dependency>
-        <groupId>info.picocli</groupId>
-        <artifactId>picocli</artifactId>
-        <version>4.7.5</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-        <version>2.20.0</version>
-    </dependency>
-</dependencies>
+```build.gradle
+dependencies {
+        implementation("org.apache.logging.log4j:log4j-core:2.24.3")
+        implementation("org.apache.logging.log4j:log4j-api:2.24.3")
+        implementation("info.picocli:picocli:4.7.6")
+        annotationProcessor("info.picocli:picocli-codegen:4.7.6")
+
+        compileOnly("org.projectlombok:lombok:1.18.36")
+        annotationProcessor("org.projectlombok:lombok:1.18.36")
+}
 ```
 ## 🔧 Logging Configuration
 Edit log4j2.properties to control logging:

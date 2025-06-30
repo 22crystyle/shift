@@ -24,9 +24,9 @@ public class StringStats implements Stats {
         }
 
         Map<String, Object> metrics = Map.of(
-                "Longest string", max,
-                "Shortest string", min,
-                "Count", count
+                "Longest line", max,
+                "Shortest line", min,
+                "The total number of lines of type String", count
         );
 
         return new StatsResult(PatternName.STRING.getName(), file, metrics);
