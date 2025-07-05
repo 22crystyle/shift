@@ -30,15 +30,15 @@ java -jar build/libs/shift.jar [OPTIONS] FILES...
 ### 2. Analyze files with statistics:
 Analyze files with statistics:
 ```bash
-java -jar shift.jar -f file1.txt data.txt
+java -jar shift.jar -f in1.txt in2.txt
 ```
 Generate summary report:
 ```bash
-java -jar shift.jar -s file1.txt
+java -jar shift.jar -s in1.txt
 ```
 Process files with custom output:
 ```bash
-java -jar shift.jar -o ./output/ -p "result_" -a important.log
+java -jar shift.jar -o ./output/ -p "result_" -a in1.txt in2.txt
 ```
 
 ## 🛠️ Command Line Options
